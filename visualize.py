@@ -12,7 +12,7 @@ class Animation:
     self.map = map
     self.schedule = schedule
     self.combined_schedule = {}
-    self.combined_schedule.update(self.schedule["schedule"])
+    self.combined_schedule.update(self.schedule["path planning"])
 
     aspect = map["map"]["dimensions"][0] / map["map"]["dimensions"][1]
 
@@ -49,7 +49,7 @@ class Animation:
       self.agents[name] = Circle((d["start"][0], d["start"][1]), 0.3, facecolor=Colors[2], edgecolor='black')
       self.agents[name].original_face_color = Colors[2]
       self.patches.append(self.agents[name])
-      self.T = max(self.T, schedule["schedule"][name][-1]["t"])
+      self.T = max(self.T, schedule["path planning"][name][-1]["t"])
       self.agent_names[name] = self.ax.text(d["start"][0], d["start"][1], name.replace('agent', ''))
       self.agent_names[name].set_horizontalalignment('center')
       self.agent_names[name].set_verticalalignment('center')
@@ -124,10 +124,10 @@ class Animation:
 
 
 if __name__ == "__main__":
-  map = 'input.yaml'
+  map = 'map32x32.yaml'
   schedule = 'output.yaml'
   video = 'simulation.gif'
-  speed = 2
+  speed = 4
   with open(map) as map_file:
     map = yaml.load(map_file, Loader=yaml.FullLoader)
 
@@ -136,5 +136,5 @@ if __name__ == "__main__":
 
   animation = Animation(map, schedule)
 
-  animation.save(video, speed)
+  # animation.save(video, speed)
   animation.show()

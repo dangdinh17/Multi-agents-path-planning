@@ -8,11 +8,13 @@ class CBS(object):
         self.env = environment
         self.neighbor_nodes = set()
         self.arrived_set = set()
+
     def search(self):
         start = PriorityNode()
         start.constraint_dict = {}
         for agent in self.env.agent_dict.keys():
             start.constraint_dict[agent] = Constraints()
+
         start.path = self.env.compute_path()
         if not start.path:
             return {}
@@ -34,17 +36,17 @@ class CBS(object):
             constraint_dict = self.env.create_constraints_from_conflict(conflict_dict)
 
             for agent in constraint_dict.keys():
-                new_node = deepcopy(P)
-                new_node.constraint_dict[agent].add_constraint(constraint_dict[agent])
+                temp_node = deepcopy(P)
+                temp_node.constraint_dict[agent].add_constraint(constraint_dict[agent])
 
-                self.env.constraint_dict = new_node.constraint_dict
-                new_node.path = self.env.compute_path()
-                if not new_node.path:
+                self.env.constraint_dict = temp_node.constraint_dict
+                temp_node.path = self.env.compute_path()
+                if not temp_node.path:
                     continue
-                new_node.cost = self.env.compute_path_cost(new_node.path)
+                temp_node.cost = self.env.compute_path_cost(temp_node.path)
 
-                if new_node not in self.arrived_set:
-                    self.neighbor_nodes |= {new_node}
+                if temp_node not in self.arrived_set:
+                    self.neighbor_nodes |= {temp_node}
 
         return {}
 
@@ -56,7 +58,7 @@ class CBS(object):
         return plan
 
 def main():
-    param = 'input.yaml'
+    param = 'map32x32.yaml'
     output_file = 'output.yaml'
     # Read from input file
     with open(param, 'r') as param_file:

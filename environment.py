@@ -171,7 +171,8 @@ class PriorityNode(object):
 
     #so sánh 2 node ưu tiên về quỹ đạo và chi phí
     def __eq__(self, other):
-        if not isinstance(other, type(self)): return NotImplemented
+        if not isinstance(other, type(self)): 
+            return NotImplemented
         return self.path == other.path and self.cost == other.cost
 
     #tạo bảng băm cho chi phí
