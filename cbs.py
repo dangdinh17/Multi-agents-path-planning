@@ -14,7 +14,7 @@ class CBS(object):
         start.constraint_dict = {}
         for agent in self.env.agent_dict.keys():
             start.constraint_dict[agent] = Constraints()
-
+        i = 0
         start.path = self.env.compute_path()
         if not start.path:
             return {}
@@ -58,7 +58,7 @@ class CBS(object):
         return plan
 
 def main():
-    param = 'map32x32.yaml'
+    param = 'map8x8.yaml'
     output_file = 'output.yaml'
     # Read from input file
     with open(param, 'r') as param_file:

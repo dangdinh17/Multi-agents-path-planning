@@ -35,20 +35,30 @@ class Animation:
     plt.ylim(ymin, ymax)
 
     self.patches.append(Rectangle((xmin, ymin), xmax - xmin, ymax - ymin, facecolor='none', edgecolor='red'))
+    #thêm vật cản
     for o in map["map"]["obstacles"]:
       x, y = o[0], o[1]
       self.patches.append(Rectangle((x - 0.5, y - 0.5), 1, 1, facecolor='red', edgecolor='red'))
 
     # create agents:
     self.T = 0
-    # draw goals first
+    #thêm điểm đích
     for d, i in zip(map["agents"], range(0, len(map["agents"]))):
-      self.patches.append(Rectangle((d["goal"][0] - 0.25, d["goal"][1] - 0.25), 0.5, 0.5, facecolor=Colors[1], edgecolor='black', alpha=0.5))
+      goal_x = d["goal"][0] - 0.25
+      goal_y = d["goal"][1] - 0.25
+      self.patches.append(Rectangle((goal_x, goal_y), 0.5, 0.5, facecolor=Colors[1], edgecolor='black', alpha=0.5))
+      
+      name = d['name']
+      goal_name = self.ax.text(goal_x + 0.25, goal_y + 0.25, name.replace('agent', ''), color='black', ha='center', va='center')
+      self.artists.append(goal_name)
+    
+    #thêm robot
     for d, i in zip(map["agents"], range(0, len(map["agents"]))):
       name = d["name"]
       self.agents[name] = Circle((d["start"][0], d["start"][1]), 0.3, facecolor=Colors[2], edgecolor='black')
       self.agents[name].original_face_color = Colors[2]
       self.patches.append(self.agents[name])
+      
       self.T = max(self.T, schedule["path planning"][name][-1]["t"])
       self.agent_names[name] = self.ax.text(d["start"][0], d["start"][1], name.replace('agent', ''))
       self.agent_names[name].set_horizontalalignment('center')
@@ -124,10 +134,10 @@ class Animation:
 
 
 if __name__ == "__main__":
-  map = 'map32x32.yaml'
+  map = 'map8x8.yaml'
   schedule = 'output.yaml'
   video = 'simulation.gif'
-  speed = 4
+  speed = 3
   with open(map) as map_file:
     map = yaml.load(map_file, Loader=yaml.FullLoader)
 
@@ -136,5 +146,5 @@ if __name__ == "__main__":
 
   animation = Animation(map, schedule)
 
-  # animation.save(video, speed)
+  animation.save(video, speed)
   animation.show()
